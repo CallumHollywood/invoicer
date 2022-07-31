@@ -18,15 +18,22 @@ mod_enter_hours_ui <- function(id){
     fluidRow(
       column(2
              , mod_genr8_day_form_ui(ns("genr8_day_form_1"))
-             , actionButton(ns("btn_gen_r_8_form"), "GENR8 a Record")
-             , br()
-             , actionButton(ns("btn_write_rds"), "write_rds")
+             # , actionButton(ns("btn_gen_r_8_form"), "GENR8 a Record", width = '100%')
+             # , br()
+             # , br()
+             # , actionButton(ns("btn_write_rds"), "write_rds", width = '100%')
+             # , br()
+             # , br()
+             # , actionButton(ns("btn_clear_records"), "clear", width = '100%')
       )
       , column(10
              , fluidRow(
                # column(width = 2, actionButton(ns("btn_gen_r_8_form"), "GEN R 8 a FORM"))
                column(width = 6, tags$div(id = ns("add_UI_here")))
-               , column(width = 4, tableOutput(ns("all_form_values_table")))
+               , column(width = 4
+                        , tableOutput(ns("all_form_values_table"))
+                        , tableOutput(ns('ot_all_form_sums'))
+                        )
              )
       )
     )
@@ -39,9 +46,18 @@ mod_enter_hours_ui <- function(id){
 mod_enter_hours_server <- function(
   id
   , menu_left_main_trigger
+  , btn_gen_r_8_form
+  , dstnct_accounts
 ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+    # observeEvent(btn_gen_r_8_form(),{
+    #
+    #   print('btn_gen_r_8_form()')
+    #   print(btn_gen_r_8_form())
+    #
+    # })
 
     #### <<<<    CALLMODULES     >>>>  ####
     #-------------------------------------#
@@ -60,12 +76,27 @@ mod_enter_hours_server <- function(
     #-------------------------------------#
 
 
-    # all_form_sums_rctv <- reactive({
-    #
-    #   all_form_values_rctv() %>%
-    #     dplyr::select()
-    #
-    # })
+    all_form_sums_rctv <- reactive({
+
+      req(all_form_values_rctv())
+
+      all_form_values_rctv() %>%
+        dplyr::select(account, hours) %>%
+        dplyr::group_by(account) %>%
+        dplyr::summarise(account_hours = sum(hours)) %>%
+        dplyr::mutate(account_hours = as.numeric(account_hours)) %>%
+        dplyr::arrange(account) %>%
+        janitor::adorn_totals()
+
+    })
+
+    output$ot_all_form_sums <- renderTable({
+
+      # req(all_form_sums_rctv())
+
+      all_form_sums_rctv()
+
+    })
 
     all_form_values_rctv <- reactive({
 
@@ -73,27 +104,30 @@ mod_enter_hours_server <- function(
 
       res <- lapply(reactiveValuesToList(gen_forms), function(current_module_output) {
 
-        current_module_output$select_values_all() %>%
-          dplyr::rename(date = dt_entr_day) %>%
-          dplyr::mutate(date = strftime(date, format="%Y-%m-%d")) %>%
-          dplyr::mutate(start = glue::glue('{strt_hr}:{strt_qtr}')) %>%
-          dplyr::mutate(end = glue::glue('{end_hr}:{end_qtr}')) %>%
-          dplyr::mutate(date_start = lubridate::ymd_hm(
-            paste0(date, " ", start)
-          )) %>%
-          dplyr::mutate(date_start = strftime(date_start
-                                                 , format="%Y-%m-%d %H:%M"
-                                                 , tz = "GMT"
-          )) %>%
-
-          dplyr::mutate(date_end = lubridate::ymd_hm(
-            paste0(date, " ", end)
-          )) %>%
-          dplyr::mutate(date_end = strftime(date_end
-                                              , format="%Y-%m-%d %H:%M"
-                                              , tz = "GMT"
-          )) %>%
-          dplyr::mutate(hours = difftime(date_end,date_start, units = "hours"))
+        current_module_output$select_values_all()
+        # %>%
+        #   dplyr::rename(date = dt_entr_day) %>%
+        #   dplyr::mutate(date = strftime(date, format="%Y-%m-%d")) %>%
+        #   # dplyr::mutate(start = glue::glue('{strt_hr}:{strt_qtr}')) %>%
+        #   # dplyr::mutate(start = paste0(strt_hr, ':', strt_qtr)) %>%
+        #   # dplyr::mutate(end = glue::glue('{end_hr}:{end_qtr}')) %>%
+        #   # dplyr::mutate(end = paste0(end_hr, ':', end_qtr)) %>%
+        #   dplyr::mutate(date_start = lubridate::ymd_hm(
+        #     paste0(date, " ", start)
+        #   )) %>%
+        #   dplyr::mutate(date_start = strftime(date_start
+        #                                          , format="%Y-%m-%d %H:%M"
+        #                                          , tz = "GMT"
+        #   )) %>%
+        #
+        #   dplyr::mutate(date_end = lubridate::ymd_hm(
+        #     paste0(date, " ", end)
+        #   )) %>%
+        #   dplyr::mutate(date_end = strftime(date_end
+        #                                       , format="%Y-%m-%d %H:%M"
+        #                                       , tz = "GMT"
+        #   )) %>%
+        #   dplyr::mutate(hours = difftime(date_end,date_start, units = "hours"))
 
       })
 
@@ -137,35 +171,44 @@ mod_enter_hours_server <- function(
     })
 
 
-    dstnct_accounts <- eventReactive(input$btn_gen_r_8_form,{
+    # dstnct_accounts <- eventReactive(input$btn_gen_r_8_form,{
+    # dstnct_accounts <- eventReactive(btn_gen_r_8_form(),{
+    #
+    #   db_sql <- 'select distinct account from accounts.accounts order by account;'
+    #
+    #   message(db_sql)
+    #
+    #   con <- appbench::database_connection()
+    #
+    #   rtrnr <- DBI::dbGetQuery(
+    #     con
+    #     , db_sql
+    #   ) %>%
+    #     dplyr::pull(account)
+    #
+    #   DBI::dbDisconnect(con)
+    #
+    #   return(rtrnr)
+    #
+    # })
 
-      db_sql <- 'select distinct account from accounts.accounts order by account;'
 
-      message(db_sql)
+    # observeEvent(dstnct_accounts(),{
+    #
+    #   print('dstnct_accounts')
+    #   print(dstnct_accounts())
+    #
+    # })
 
-      con <- appbench::database_connection()
+    # observeEvent(btn_gen_r_8_form(),{
+    #
+    #   print('btn_gen_r_8_form()')
+    #   print(btn_gen_r_8_form())
+    #
+    # })
 
-      rtrnr <- DBI::dbGetQuery(
-        con
-        , db_sql
-      ) %>%
-        dplyr::pull(account)
-
-      DBI::dbDisconnect(con)
-
-      return(rtrnr)
-
-    })
-
-
-    observeEvent(dstnct_accounts(),{
-
-      print('dstnct_accounts')
-      print(dstnct_accounts())
-
-    })
-
-    observeEvent(input$btn_gen_r_8_form, {
+    # observeEvent(input$btn_gen_r_8_form, {
+    observeEvent(btn_gen_r_8_form(), {
 
 
 
@@ -175,41 +218,40 @@ mod_enter_hours_server <- function(
 
       gen_forms[[x_id]] <- mod_genr8_hrs_form_server(
         id = x_id
-        , dstnct_accounts_in = dstnct_accounts
-        , trigger = reactive({menu_left_main_trgr_rctv()})
+        , dstnct_accounts_in = reactive({dstnct_accounts()})
+        # , trigger = reactive({menu_left_main_trgr_rctv()})
         , dt_entr_day = md_genr8_day_form_server$dt_entr_day
       )
 
       insertUI(selector = paste0("#", ns("add_UI_here")),
-               ui = mod_genr8_hrs_form_ui(ns(x_id)))
-      # ui = mod_genr8_hrs_form_ui(x_id))
+                ui = mod_genr8_hrs_form_ui(ns(x_id)))
+                # ui = mod_genr8_hrs_form_ui(x_id))
 
       print('gen_forms')
       print(gen_forms)
 
       current_id <<- current_id + 1
 
-      output$all_form_values_table <- renderTable({
-
-        req(md_genr8_day_form_server$dt_entr_day)
-
-        all_form_values_rctv() %>%
-          # dplyr::rename(date = dt_entr_day) %>%
-          # dplyr::mutate(date = strftime(date, format="%Y-%m-%d")) %>%
-          # dplyr::mutate(date_start = strftime(date_start
-          #                                     , format="%Y-%m-%d %H:%M"
-          #                                     , tz = "GMT"
-          #                                     )) %>%
-          # dplyr::mutate(start = glue::glue('{strt_hr}:{strt_qtr}')) %>%
-          # dplyr::mutate(end = glue::glue('{end_hr}:{end_qtr}')) %>%
-          dplyr::select(date, account, date_start, date_end, hours
-                        # , start, end
-                        )
-      })
 
     })
 
 
+      output$all_form_values_table <- renderTable({
+
+        req(all_form_values_rctv())
+
+        all_form_values_rctv() %>%
+        #   dplyr::arrange(id) %>%
+        # dplyr::rename(date = dt_entr_day) %>%
+        # dplyr::mutate(date = strftime(date, format="%Y-%m-%d")) %>%
+        # dplyr::mutate(date_start = strftime(date_start
+        #                                     , format="%Y-%m-%d %H:%M"
+        #                                     , tz = "GMT"
+        #                                     )) %>%
+        # dplyr::mutate(start = glue::glue('{strt_hr}:{strt_qtr}')) %>%
+        # dplyr::mutate(end = glue::glue('{end_hr}:{end_qtr}')) %>%
+        dplyr::select(id, date, account, date_start, date_end, hours)
+      })
 
     #### <<<<    OUTPUTS         >>>>  ####
     #-------------------------------------#

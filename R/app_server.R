@@ -236,6 +236,8 @@ app_server <- function(input, output, session) {
   mod_enter_hours_server(
     "enter_hours_1"
     , menu_left_main_trigger = reactive({input$menu_left_main})
+    , btn_gen_r_8_form       = reactive({input$btn_gen_r_8_form})
+    , dstnct_accounts        = reactive({dstnct_accounts()})
     )
 
 
@@ -255,6 +257,27 @@ app_server <- function(input, output, session) {
 
   #### <<<<   EVENT REACTIVES  >>>>  ####
   #-------------------------------------#
+
+  dstnct_accounts <- eventReactive(input$btn_gen_r_8_form,{
+
+    db_sql <- 'select distinct account from accounts.accounts order by account;'
+
+    message(db_sql)
+
+    con <- appbench::database_connection()
+
+    rtrnr <- DBI::dbGetQuery(
+      con
+      , db_sql
+    ) %>%
+      dplyr::pull(account)
+
+    DBI::dbDisconnect(con)
+
+    return(rtrnr)
+
+  })
+
 
 
   #### <<<<   OBSERVES         >>>>  ####
@@ -333,9 +356,52 @@ app_server <- function(input, output, session) {
           , bs4Dash::menuSubItem(
             "Enter Hours"
             , tabName = "enter_hours"
+            # , conditionalPanel("input.menu_left_main === 'enter_hours'",
+            #                    'help'
+            #                  # sliderInput("b", "Under sidebarMenu", 1, 100, 50)
+            # )
+            # , selectInput(
+            #   'slt_test'
+            #   , 'slt_test'
+            #   , choices = letters
+            # )
             , icon = icon("circle")
             , selected = T
           )
+          , conditionalPanel("input.menu_left_main === 'enter_hours'"
+                             , dateInput(
+                               'side_dt_entr_day'
+                               , 'Select Date'
+                               , value = lubridate::today()
+                             )
+                             , actionButton("btn_gen_r_8_form", "GENR8 a Record", width = '100%')
+                             , br()
+                             , br()
+                             , actionButton("btn_write_rds", "write_rds", width = '100%')
+                             , br()
+                             , br()
+                             , actionButton("btn_clear_records", "clear", width = '100%')
+
+                             # sliderInput("b", "Under sidebarMenu", 1, 100, 50)
+          )
+
+          # , bs4Dash::bs4SidebarMenuSubItem(
+          #   "Enter Hours"
+          #   , tabName = "enter_hours"
+          #   , icon = icon("circle")
+          #   , selected = T
+          #   # , selectInput(
+          #   #   'slt_test'
+          #   #   , 'slt_test'
+          #   #   , choices = letters
+          #   # )
+          # )
+
+          # , dateInput(
+          #   'side_dt_entr_day'
+          #   , 'Select Date'
+          #   , value = lubridate::today()
+          # )
 
         )
       )

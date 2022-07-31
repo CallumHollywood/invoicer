@@ -16,6 +16,14 @@ mod_genr8_hrs_form_ui <- function(id){
              # , column(12
                       , style = 'background-color: #707987;'
                       , uiOutput(ns('ot_slt_account'))
+             # tagList(
+               # , selectInput(ns("slt_account")
+               #             , 'account'
+               #             , choices = NULL
+               # )
+
+             # )
+
              # )
       )
       , column(5
@@ -69,11 +77,32 @@ mod_genr8_hrs_form_ui <- function(id){
 mod_genr8_hrs_form_server <- function(
   id
   , dstnct_accounts_in
-  , trigger
+  # , trigger
   , dt_entr_day
 ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+    # observe( {
+    #
+    #   my_choices <- isolate(dstnct_accounts_in())
+    #
+    #   print('my_choices')
+    #   print(my_choices)
+    #
+    #   message(id)
+    #
+    #
+    #
+    #   updateSelectInput(
+    #     session,
+    #     'slt_account'
+    #     , 'slt_account'
+    #     , choices = my_choices
+    #   )
+    #
+    # })
+
 
     #### <<<<    CALLMODULES     >>>>  ####
     #-------------------------------------#
@@ -105,6 +134,11 @@ mod_genr8_hrs_form_server <- function(
 
     select_values_all <- reactive({
 
+      req(dt_entr_day())
+      req(input$slt_strt_hr)
+      req(input$slt_strt_qtr)
+      req(input$slt_end_hr)
+      req(input$slt_end_qtr)
       req(input$slt_account)
 
       # tibble::tibble(
@@ -113,13 +147,38 @@ mod_genr8_hrs_form_server <- function(
       #   )
       # tibble::tibble(x=1)
       tibble::tibble(
-        dt_entr_day = dt_entr_day()
-        , account  = input$slt_account
+        id = as.numeric(stringr::str_remove(id, 'module_' ))
+        ,
+        dt_entr_day = isolate(dt_entr_day())
+        ,
+        account  = input$slt_account
         , strt_hr  = input$slt_strt_hr
         , strt_qtr = input$slt_strt_qtr
         , end_hr   = input$slt_end_hr
         , end_qtr  = input$slt_end_qtr
-      )
+      ) %>%
+        dplyr::rename(date = dt_entr_day) %>%
+        dplyr::mutate(date = strftime(date, format="%Y-%m-%d")) %>%
+        # dplyr::mutate(start = glue::glue('{strt_hr}:{strt_qtr}')) %>%
+        dplyr::mutate(start = paste0(strt_hr, ':', strt_qtr)) %>%
+        # dplyr::mutate(end = glue::glue('{end_hr}:{end_qtr}')) %>%
+        dplyr::mutate(end = paste0(end_hr, ':', end_qtr)) %>%
+        dplyr::mutate(date_start = lubridate::ymd_hm(
+          paste0(date, " ", start)
+        )) %>%
+        dplyr::mutate(date_start = strftime(date_start
+                                            , format="%Y-%m-%d %H:%M"
+                                            , tz = "GMT"
+        )) %>%
+
+        dplyr::mutate(date_end = lubridate::ymd_hm(
+          paste0(date, " ", end)
+        )) %>%
+        dplyr::mutate(date_end = strftime(date_end
+                                          , format="%Y-%m-%d %H:%M"
+                                          , tz = "GMT"
+        )) %>%
+        dplyr::mutate(hours = difftime(date_end,date_start, units = "hours"))
 
 
     })
@@ -164,7 +223,7 @@ mod_genr8_hrs_form_server <- function(
       tagList(
         selectInput(ns("slt_account")
                     , 'account'
-                    , choices = dstnct_accounts_in()
+                    , choices = isolate(dstnct_accounts_in())
         )
 
       )
