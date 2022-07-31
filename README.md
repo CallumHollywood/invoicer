@@ -1,2 +1,2 @@
 # invoicer
-A Shiny app to capture dailty work activity and draw invoices.
+A Shiny app to capture daily work activity and draw invoices.
