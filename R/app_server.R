@@ -18,8 +18,8 @@ renderMenu <- function(expr, env = parent.frame(), quoted = FALSE, outputArgs = 
 
 
 get_sessions_from_db <- function(
-    # conn = con,
-    expiry = cookie_expiry) {
+  # conn = con,
+  expiry = cookie_expiry) {
   # DBI::dbReadTable(conn, "sessions") %>%
   #   dplyr::mutate(login_time = lubridate::ymd_hms(login_time)) %>%
   #   tibble::as_tibble() %>%
@@ -53,13 +53,13 @@ get_sessions_from_db <- function(
 
 add_session_to_db <- function(user, sessionid
                               # , conn = con
-                              ) {
+) {
 
   session_tbl <- tibble::tibble(
     user         = user
     , sessionid  = sessionid
     , login_time = as.character(lubridate::now())
-    )
+  )
 
   val_user  <- session_tbl$user
   val_id    <- session_tbl$sessionid
@@ -238,7 +238,10 @@ app_server <- function(input, output, session) {
     , menu_left_main_trigger = reactive({input$menu_left_main})
     , btn_gen_r_8_form       = reactive({input$btn_gen_r_8_form})
     , dstnct_accounts        = reactive({dstnct_accounts()})
-    )
+    , dt_entr_day            = reactive({input$side_dt_entr_day})
+    , write_rds_hours        = reactive({input$btn_write_rds})
+    , commit_records         = reactive({input$btn_commit_records})
+  )
 
 
   #### <<<<    STATIC VALUES   >>>>  ####
@@ -287,6 +290,15 @@ app_server <- function(input, output, session) {
   #### <<<<   OBSERVE EVENTS   >>>>  ####
   #-------------------------------------#
 
+  # observeEvent(input$btn_commit_records, {
+  #   # Show a modal when the button is pressed
+  #   shinyalert::shinyalert(
+  #     "Congrats"
+  #     , "These records were written to the database"
+  #     , type = "success"
+  #     )
+  # })
+
   observeEvent(credentials()$info,{
 
     # print('credentials()$info')
@@ -304,6 +316,8 @@ app_server <- function(input, output, session) {
   #-------------------------------------#
 
   output$outpt_main <- renderUI({
+
+    # @ outpt_main ####
     req(credentials()$user_auth)
 
     bs4Dash::bs4TabItems(
@@ -325,6 +339,8 @@ app_server <- function(input, output, session) {
 
 
   output$outpt_sidebar <- renderMenu({
+
+    # @ outpt_sidebar ####
 
     req(credentials()$user_auth)
 
@@ -356,31 +372,27 @@ app_server <- function(input, output, session) {
           , bs4Dash::menuSubItem(
             "Enter Hours"
             , tabName = "enter_hours"
-            # , conditionalPanel("input.menu_left_main === 'enter_hours'",
-            #                    'help'
-            #                  # sliderInput("b", "Under sidebarMenu", 1, 100, 50)
-            # )
-            # , selectInput(
-            #   'slt_test'
-            #   , 'slt_test'
-            #   , choices = letters
-            # )
             , icon = icon("circle")
             , selected = T
           )
           , conditionalPanel("input.menu_left_main === 'enter_hours'"
-                             , dateInput(
-                               'side_dt_entr_day'
-                               , 'Select Date'
-                               , value = lubridate::today()
+                             , column(12
+                                      , dateInput(
+                                        'side_dt_entr_day'
+                                        , 'Select Date'
+                                        , value = lubridate::today()
+                                        , width = '80%'
+                                      )
+                                      , actionButton("btn_gen_r_8_form", "GENR8 a Record", width = '80%')
+                                      , actionButton("btn_write_rds", "write_rds", width = '80%')
+                                      , actionButton("btn_clear_records", "clear", width = '80%')
+                                      , actionButton("btn_commit_records", "commit", width = '80%')
+                                      # , tags$script(paste0('$(document).on("click", "#btn_commit_records", function () {
+                                      #           alert("btn_commit_records")
+                                      #               })')
+                                      #           )
+
                              )
-                             , actionButton("btn_gen_r_8_form", "GENR8 a Record", width = '100%')
-                             , br()
-                             , br()
-                             , actionButton("btn_write_rds", "write_rds", width = '100%')
-                             , br()
-                             , br()
-                             , actionButton("btn_clear_records", "clear", width = '100%')
 
                              # sliderInput("b", "Under sidebarMenu", 1, 100, 50)
           )

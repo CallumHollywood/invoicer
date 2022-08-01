@@ -11,6 +11,8 @@
 #### CURRENT FILE: DEV SCRIPT #####
 ###################################
 
+usethis::use_package('shinyalert')
+
 # Engineering
 
 ## Dependencies ----

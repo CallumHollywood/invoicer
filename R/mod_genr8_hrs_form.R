@@ -12,21 +12,23 @@ mod_genr8_hrs_form_ui <- function(id){
   ns <- NS(id)
   tagList(
     fluidRow(
-      column(2
-             # , column(12
-                      , style = 'background-color: #707987;'
-                      , uiOutput(ns('ot_slt_account'))
-             # tagList(
-               # , selectInput(ns("slt_account")
-               #             , 'account'
-               #             , choices = NULL
-               # )
+      column(4
+             , style = 'background-color: #707987;'
+             , fluidRow(
+               column(3
+                      , checkboxInput(ns('chbx_incl_hrs')
+                                      , 'Include'
+                                      , value = T
+                                      )
+                      )
+               , column(9
 
-             # )
+                        , uiOutput(ns('ot_slt_account'))
 
-             # )
+               )
+             )
       )
-      , column(5
+      , column(4
                , style = 'background-color: #c3d0e6;'
                , fluidRow(
                  column(6
@@ -46,7 +48,7 @@ mod_genr8_hrs_form_ui <- function(id){
                  )
                )
       )
-      , column(5
+      , column(4
                , style = 'background-color: #707987;'
                , fluidRow(
                  column(6
@@ -156,7 +158,9 @@ mod_genr8_hrs_form_server <- function(
         , strt_qtr = input$slt_strt_qtr
         , end_hr   = input$slt_end_hr
         , end_qtr  = input$slt_end_qtr
+        , incl_hrs = input$chbx_incl_hrs
       ) %>%
+
         dplyr::rename(date = dt_entr_day) %>%
         dplyr::mutate(date = strftime(date, format="%Y-%m-%d")) %>%
         # dplyr::mutate(start = glue::glue('{strt_hr}:{strt_qtr}')) %>%
@@ -178,7 +182,8 @@ mod_genr8_hrs_form_server <- function(
                                           , format="%Y-%m-%d %H:%M"
                                           , tz = "GMT"
         )) %>%
-        dplyr::mutate(hours = difftime(date_end,date_start, units = "hours"))
+        dplyr::mutate(hours = difftime(date_end,date_start, units = "hours")) %>%
+        dplyr::filter(incl_hrs == T)
 
 
     })

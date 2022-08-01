@@ -99,6 +99,7 @@ golem_add_external_resources <- function() {
       app_title = "authapp"
     )
     , shinyjs::useShinyjs()
+    # , shinyalert::useShinyalert()
   )
 }
 
