@@ -28,7 +28,7 @@ usethis::use_package('shinyalert')
 # golem::add_module(name = "enter_hours")
 golem::add_module(name = "genr8_hrs_form")
 golem::add_module(name = "genr8_day_form")
-
+golem::add_module(name = "review_hours")
 ## Add helper functions ----
 ## Creates fct_* and utils_*
 # golem::add_fct("helpers", with_test = TRUE)

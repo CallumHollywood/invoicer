@@ -98,8 +98,8 @@ mod_view_account_server <- function(id){
       )
 
 
-      print('sql_line')
-      print(sql_line)
+      # print('sql_line')
+      # print(sql_line)
 
       con <- appbench::database_connection()
 

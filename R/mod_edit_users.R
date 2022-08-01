@@ -122,7 +122,7 @@ mod_edit_users_server <- function(
 
     user_edit_users_rctv <- reactive({
 
-      print("user_edit_users_rctv")
+      # print("user_edit_users_rctv")
 
       btn_cnfrm_add_user_rctv()
       input$btn_cnfrm_delete_user
@@ -307,8 +307,8 @@ mod_edit_users_server <- function(
 
     observeEvent(input$btn_commit_delete, {
 
-      print('delete_record_check()')
-      print(delete_record_check())
+      # print('delete_record_check()')
+      # print(delete_record_check())
 
       if(delete_record_check() == 'hide'){
 

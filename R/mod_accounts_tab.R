@@ -361,8 +361,8 @@ mod_accounts_tab_server <- function(
       )
 
 
-      print("sql_line --------")
-      print(sql_line)
+      # print("sql_line --------")
+      # print(sql_line)
 
 
       con <- appbench::database_connection()
@@ -372,8 +372,8 @@ mod_accounts_tab_server <- function(
         , sql_line
       )
 
-      print("sql_results")
-      print(sql_results)
+      # print("sql_results")
+      # print(sql_results)
 
       DBI::dbDisconnect(con)
 
@@ -601,8 +601,8 @@ mod_accounts_tab_server <- function(
         # , paste0("'", Sys.time(), "');")
       )
 
-      print('add sql line')
-      print(sql_line)
+      # print('add sql line')
+      # print(sql_line)
 
 
       con <- appbench::database_connection()

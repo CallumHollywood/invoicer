@@ -208,12 +208,7 @@ app_server <- function(input, output, session) {
   gargoyle::init(
     "account_slt"
     , 'updt_edit_account_choices'
-    # , 'sessions_rctv'
-    # , 'sessions_rctv2'
-    # , 'div_datasets'
-    # , 'tgr_sn_xmpl'
-    # , 'tgr_delete_sn'
-    # , 'trg_edt_sn'
+    , 'trg_genr8_day_form_id'
   )
 
 
@@ -235,17 +230,21 @@ app_server <- function(input, output, session) {
 
   mod_enter_hours_server(
     "enter_hours_1"
-    , menu_left_main_trigger = reactive({input$menu_left_main})
-    , btn_gen_r_8_form       = reactive({input$btn_gen_r_8_form})
-    , dstnct_accounts        = reactive({dstnct_accounts()})
-    , dt_entr_day            = reactive({input$side_dt_entr_day})
-    , write_rds_hours        = reactive({input$btn_write_rds})
-    , commit_records         = reactive({input$btn_commit_records})
+    , pass_around
   )
+
+  mod_review_hours_server(
+    "review_hours_1"
+    )
 
 
   #### <<<<    STATIC VALUES   >>>>  ####
   #-------------------------------------#
+  # gen_dyfrms       <- reactiveValues()
+  # dyfrm_id <- 1
+
+
+  pass_around <- environment()
 
 
   #### <<<<   REACTIVES        >>>>  ####
@@ -255,31 +254,12 @@ app_server <- function(input, output, session) {
   #### <<<<   REACTIVES VALS   >>>>  ####
   #-------------------------------------#
 
-  # This is needed (with the observeenet on it) to pass the right name to mod_home_server
+  # This is needed (with the observeEvent on it) to pass the right name to mod_home_server
   user_name_rctv <- reactiveVal(NULL)
 
   #### <<<<   EVENT REACTIVES  >>>>  ####
   #-------------------------------------#
 
-  dstnct_accounts <- eventReactive(input$btn_gen_r_8_form,{
-
-    db_sql <- 'select distinct account from accounts.accounts order by account;'
-
-    message(db_sql)
-
-    con <- appbench::database_connection()
-
-    rtrnr <- DBI::dbGetQuery(
-      con
-      , db_sql
-    ) %>%
-      dplyr::pull(account)
-
-    DBI::dbDisconnect(con)
-
-    return(rtrnr)
-
-  })
 
 
 
@@ -290,14 +270,8 @@ app_server <- function(input, output, session) {
   #### <<<<   OBSERVE EVENTS   >>>>  ####
   #-------------------------------------#
 
-  # observeEvent(input$btn_commit_records, {
-  #   # Show a modal when the button is pressed
-  #   shinyalert::shinyalert(
-  #     "Congrats"
-  #     , "These records were written to the database"
-  #     , type = "success"
-  #     )
-  # })
+
+
 
   observeEvent(credentials()$info,{
 
@@ -328,6 +302,10 @@ app_server <- function(input, output, session) {
       , bs4Dash::bs4TabItem(
         'enter_hours'
         , mod_enter_hours_ui("enter_hours_1")
+      )
+      , bs4Dash::bs4TabItem(
+        'rvw_hours'
+        , mod_review_hours_ui("review_hours_1")
       )
 
 
@@ -373,47 +351,39 @@ app_server <- function(input, output, session) {
             "Enter Hours"
             , tabName = "enter_hours"
             , icon = icon("circle")
+            , selected = F
+          )
+          , bs4Dash::menuSubItem(
+            "Review Hours"
+            , tabName = "rvw_hours"
+            , icon = icon("circle")
             , selected = T
           )
-          , conditionalPanel("input.menu_left_main === 'enter_hours'"
-                             , column(12
-                                      , dateInput(
-                                        'side_dt_entr_day'
-                                        , 'Select Date'
-                                        , value = lubridate::today()
-                                        , width = '80%'
-                                      )
-                                      , actionButton("btn_gen_r_8_form", "GENR8 a Record", width = '80%')
-                                      , actionButton("btn_write_rds", "write_rds", width = '80%')
-                                      , actionButton("btn_clear_records", "clear", width = '80%')
-                                      , actionButton("btn_commit_records", "commit", width = '80%')
-                                      # , tags$script(paste0('$(document).on("click", "#btn_commit_records", function () {
-                                      #           alert("btn_commit_records")
-                                      #               })')
-                                      #           )
 
-                             )
-
-                             # sliderInput("b", "Under sidebarMenu", 1, 100, 50)
-          )
-
-          # , bs4Dash::bs4SidebarMenuSubItem(
-          #   "Enter Hours"
-          #   , tabName = "enter_hours"
-          #   , icon = icon("circle")
-          #   , selected = T
-          #   # , selectInput(
-          #   #   'slt_test'
-          #   #   , 'slt_test'
-          #   #   , choices = letters
-          #   # )
+          # , conditionalPanel("input.menu_left_main === 'enter_hours'"
+          #                    , column(12
+          #                             # , dateInput(
+          #                             #   'side_dt_entr_day'
+          #                             #   , 'Select Date'
+          #                             #   , value = lubridate::today()
+          #                             #   , width = '80%'
+          #                             # )
+          #                             # , actionButton("btn_genr8_dayform", "GENR8 Day Form", width = '80%')
+          #                             # , actionButton("btn_gen_r_8_form", "GENR8 a Record", width = '80%')
+          #                             , actionButton("btn_write_rds", "write_rds", width = '80%')
+          #                             , actionButton("btn_clear_records", "clear", width = '80%')
+          #                             , actionButton("btn_commit_records", "commit", width = '80%')
+          #                             # , tags$script(paste0('$(document).on("click", "#btn_commit_records", function () {
+          #                             #           alert("btn_commit_records")
+          #                             #               })')
+          #                             #           )
+          #
+          #                    )
+          #
+          #                    # sliderInput("b", "Under sidebarMenu", 1, 100, 50)
           # )
 
-          # , dateInput(
-          #   'side_dt_entr_day'
-          #   , 'Select Date'
-          #   , value = lubridate::today()
-          # )
+
 
         )
       )
