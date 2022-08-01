@@ -143,18 +143,18 @@ mod_accounts_ui <- function(id){
                            )
                     )
                     , column(9
-                           , align = 'left'
-                           , br()
-                           , bs4Dash::infoBox(
-                             title      = h5(tags$u("User Profile"))
-                             , color    = "primary"
-                             , gradient = TRUE
-                             , fill     = TRUE
-                             , width    = 12
-                             , icon = shiny::icon("fas fa-chart-bar")
-                             , uiOutput(ns('outpt_accounts_users'))
-                             ,
-                           )
+                             , align = 'left'
+                             , br()
+                             , bs4Dash::infoBox(
+                               title      = h5(tags$u("User Profile"))
+                               , color    = "primary"
+                               , gradient = TRUE
+                               , fill     = TRUE
+                               , width    = 12
+                               , icon = shiny::icon("fas fa-chart-bar")
+                               , uiOutput(ns('outpt_accounts_users'))
+                               ,
+                             )
                     )
 
                   )
@@ -230,6 +230,10 @@ mod_accounts_ui <- function(id){
           )
         )
       )
+      , tabPanel(
+        'invoices'
+        ,        mod_invoice_tab_ui("invoice_tab_1")
+      )
 
     )
 
@@ -244,9 +248,18 @@ mod_accounts_server <- function(
   , user_base
   , callback
   # , logout_init
+  # , dstnct_accounts_rctv
+  , sn_env
 ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
+
+    # observeEvent(dstnct_accounts_rctv(),{
+    #
+    #   print('dstnct_accounts_rctv()')
+    #   print(dstnct_accounts_rctv())
+    #
+    # })
 
 
     #### <<<<    CALLMODULES     >>>>  ####
@@ -260,6 +273,12 @@ mod_accounts_server <- function(
     mod_accounts_tab_server(
       "accounts_tab_ui_1"
       , callback = callback
+    )
+
+    mod_invoice_tab_server(
+      "invoice_tab_1"
+      , sn_env
+      # , dstnct_accounts_rctv = reactive({dstnct_accounts_rctv()})
     )
 
     #### <<<<    STATIC VALUES   >>>>  ####

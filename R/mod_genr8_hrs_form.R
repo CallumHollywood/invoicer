@@ -148,7 +148,7 @@ mod_genr8_hrs_form_server <- function(
                                           , format="%Y-%m-%d %H:%M"
                                           , tz = "GMT"
         )) %>%
-        dplyr::mutate(hours = difftime(date_end,date_start, units = "hours")) %>%
+        dplyr::mutate(hours = as.numeric(difftime(date_end,date_start, units = "hours"))) %>%
         dplyr::filter(incl_hrs == T)
 
 

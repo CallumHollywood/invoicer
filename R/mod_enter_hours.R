@@ -38,6 +38,7 @@ mod_enter_hours_ui <- function(id){
 mod_enter_hours_server <- function(
   id
   , pass_around
+  , dstnct_accounts_rctv
 ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -57,7 +58,6 @@ mod_enter_hours_server <- function(
     #### <<<<    STATIC VALUES   >>>>  ####
     #-------------------------------------#
 
-    gen_dyfrms  <- reactiveValues()
     dyfrm_id    <- 1
 
     #### <<<<   REACTIVES        >>>>  ####
@@ -68,9 +68,30 @@ mod_enter_hours_server <- function(
     #### <<<<   REACTIVES VALS   >>>>  ####
     #-------------------------------------#
 
+    gen_dyfrms  <- reactiveValues()
 
     #### <<<<   EVENT REACTIVES  >>>>  ####
     #-------------------------------------#
+
+    # dstnct_accounts_rctv <- eventReactive(id,{
+    #
+    #   db_sql <- 'select distinct account from accounts.accounts order by account;'
+    #
+    #   # message(db_sql)
+    #
+    #   con <- appbench::database_connection()
+    #
+    #   rtrnr <- DBI::dbGetQuery(
+    #     con
+    #     , db_sql
+    #   ) %>%
+    #     dplyr::pull(account)
+    #
+    #   DBI::dbDisconnect(con)
+    #
+    #   return(rtrnr)
+    #
+    # })
 
 
     #### <<<<   OBSERVES         >>>>  ####
@@ -81,25 +102,6 @@ mod_enter_hours_server <- function(
     #-------------------------------------#
 
 
-    dstnct_accounts_rctv <- eventReactive(id,{
-
-      db_sql <- 'select distinct account from accounts.accounts order by account;'
-
-      message(db_sql)
-
-      con <- appbench::database_connection()
-
-      rtrnr <- DBI::dbGetQuery(
-        con
-        , db_sql
-      ) %>%
-        dplyr::pull(account)
-
-      DBI::dbDisconnect(con)
-
-      return(rtrnr)
-
-    })
 
 
     observeEvent(input$btn_genr8_dayform, {

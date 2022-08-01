@@ -56,14 +56,6 @@ mod_review_hours_server <- function(id){
     #### <<<<   EVENT REACTIVES  >>>>  ####
     #-------------------------------------#
 
-
-    #### <<<<   OBSERVES         >>>>  ####
-    #-------------------------------------#
-
-
-    #### <<<<   OBSERVE EVENTS   >>>>  ####
-    #-------------------------------------#
-
     res_fetch_hours <- eventReactive(input$btn_fetch_hours,{
 
       con <- appbench::database_connection()
@@ -72,13 +64,25 @@ mod_review_hours_server <- function(id){
 
       daily_hours <- daily_hours %>%
         dplyr::filter(date >= as.Date(!!input$dt_rvw_hrs[1])) %>%
-        dplyr::collect()
+        dplyr::select(date,  start, end, hours, account) %>%
+        dplyr::arrange(date,  start, account) %>%
+        dplyr::collect() %>%
+        dplyr::mutate(date = strftime(date, format="%Y-%m-%d"))
 
       DBI::dbDisconnect(con)
 
       return(daily_hours)
 
     })
+
+
+    #### <<<<   OBSERVES         >>>>  ####
+    #-------------------------------------#
+
+
+    #### <<<<   OBSERVE EVENTS   >>>>  ####
+    #-------------------------------------#
+
 
 
     #### <<<<    OUTPUTS         >>>>  ####

@@ -1,0 +1,21 @@
+CREATE TABLE services.daily_hours_test
+(
+    pk_id integer NOT NULL DEFAULT nextval('services.daily_hours_pk_id_seq'::regclass),
+	id double precision,
+    date timestamp without time zone,
+    account character varying(100) COLLATE pg_catalog."default",
+    strt_hr character varying(10) COLLATE pg_catalog."default",
+    strt_qtr character varying(10) COLLATE pg_catalog."default",
+    end_hr character varying(10) COLLATE pg_catalog."default",
+    end_qtr character varying(10) COLLATE pg_catalog."default",
+    incl_hrs boolean,
+    notes text COLLATE pg_catalog."default",
+    start character varying(10) COLLATE pg_catalog."default",
+    "end" character varying(10) COLLATE pg_catalog."default",
+    date_start timestamp without time zone,
+    date_end timestamp without time zone,
+    hours double precision,
+    CONSTRAINT daily_hours_pkey_test PRIMARY KEY (pk_id)
+)
+
+
