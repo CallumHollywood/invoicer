@@ -5,4 +5,4 @@ default:
 production:
   app_prod: yes
 dev:
-  golem_wd: /home/callum28/nexus/dev/apps/pckgs/invoicer
+  golem_wd: /home/callum28/nexus/apps/pckgs/invoicer/invoicer

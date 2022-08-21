@@ -51,6 +51,17 @@ get_sessions_from_db <- function(
 }
 
 
+con <- appbench::database_connection()
+sn_env <- environment()
+
+sn_env$sn_clients <- DBI::dbGetQuery(
+  con
+  , 'select distinct account from accounts.accounts order by account;'
+) %>%
+  dplyr::pull(account)
+
+DBI::dbDisconnect(con)
+
 add_session_to_db <- function(user, sessionid
                               # , conn = con
 ) {
@@ -220,6 +231,7 @@ app_server <- function(input, output, session) {
     "accounts_ui_1"
     , user_base = user_base
     , callback  = callback
+    , sn_env = sn_env
     # , logout_init = logout_init
   )
 
