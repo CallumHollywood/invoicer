@@ -103,7 +103,8 @@ mod_accounts_ui <- function(id){
                                , gradient = TRUE
                                , fill     = TRUE
                                , width    = 12
-                               , icon = shiny::icon("fas fa-chart-bar")
+                               # , icon = shiny::icon("cog", verify_fa = FALSE)
+                               , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
                                , tableOutput(ns('outpt_user_base'))
                              )
                     )
@@ -151,7 +152,8 @@ mod_accounts_ui <- function(id){
                                , gradient = TRUE
                                , fill     = TRUE
                                , width    = 12
-                               , icon = shiny::icon("fas fa-chart-bar")
+                               # , icon = shiny::icon("cog", verify_fa = FALSE)
+                               , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
                                , uiOutput(ns('outpt_accounts_users'))
                                ,
                              )

@@ -567,7 +567,8 @@ mod_edit_users_server <- function(
           , h5(paste("Given Name: ", delete_user_rctv()$name))
         )
         , color = "orange"
-        , icon = icon("database")
+        # , icon = shiny::icon("cog", verify_fa = FALSE)
+        , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
         , width = 12
       )
 

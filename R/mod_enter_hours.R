@@ -38,7 +38,7 @@ mod_enter_hours_ui <- function(id){
 mod_enter_hours_server <- function(
   id
   , pass_around
-  , dstnct_accounts_rctv
+  # , dstnct_accounts_rctv
 ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -73,25 +73,25 @@ mod_enter_hours_server <- function(
     #### <<<<   EVENT REACTIVES  >>>>  ####
     #-------------------------------------#
 
-    # dstnct_accounts_rctv <- eventReactive(id,{
-    #
-    #   db_sql <- 'select distinct account from accounts.accounts order by account;'
-    #
-    #   # message(db_sql)
-    #
-    #   con <- appbench::database_connection()
-    #
-    #   rtrnr <- DBI::dbGetQuery(
-    #     con
-    #     , db_sql
-    #   ) %>%
-    #     dplyr::pull(account)
-    #
-    #   DBI::dbDisconnect(con)
-    #
-    #   return(rtrnr)
-    #
-    # })
+    dstnct_accounts_rctv <- eventReactive(id,{
+
+      db_sql <- 'select distinct account from accounts.accounts order by account;'
+
+      # message(db_sql)
+
+      con <- appbench::database_connection()
+
+      rtrnr <- DBI::dbGetQuery(
+        con
+        , db_sql
+      ) %>%
+        dplyr::pull(account)
+
+      DBI::dbDisconnect(con)
+
+      return(rtrnr)
+
+    })
 
 
     #### <<<<   OBSERVES         >>>>  ####

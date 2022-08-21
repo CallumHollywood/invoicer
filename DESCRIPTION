@@ -12,6 +12,7 @@ Imports:
     DT,
     gargoyle,
     golem (>= 0.3.3),
+    janitor,
     R.utils,
     readr,
     RPostgres,

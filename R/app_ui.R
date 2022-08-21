@@ -6,7 +6,7 @@
 #' @noRd
 
 
-source('R/set_options.R')
+# source('R/set_options.R')
 
 app_ui <- function(request) {
   tagList(

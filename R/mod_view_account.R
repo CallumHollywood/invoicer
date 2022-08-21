@@ -30,7 +30,8 @@ mod_view_account_ui <- function(id){
                  , gradient = T
                  , fill     = T
                  , width    = 12
-                 , icon = shiny::icon("fas fa-chart-bar")
+                 # , icon = shiny::icon("cog", verify_fa = FALSE)
+                 , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
                  , uiOutput(ns('outpt_view_account'))
                  # , DT::dataTableOutput(ns('outpt_view_account'))
                )

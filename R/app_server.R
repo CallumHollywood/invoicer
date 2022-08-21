@@ -5,6 +5,9 @@
 #' @import shiny
 #' @noRd
 
+source('R/set_options.R')
+
+
 cookie_expiry <- 7
 
 # This is a FIX from SO - LOST the link
@@ -345,7 +348,8 @@ app_server <- function(input, output, session) {
         , legacy = FALSE
         , bs4Dash::bs4SidebarMenuItem(
           'Admin'
-          , icon = NULL
+          # , icon = shiny::icon("cog", verify_fa = FALSE) # NULL
+          , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
           , badgeLabel = NULL
           , badgeColor = "success"
           , tabName = 'view_admin'
@@ -357,18 +361,21 @@ app_server <- function(input, output, session) {
           , bs4Dash::menuSubItem(
             "Accounts"
             , tabName = "view_accounts"
-            , icon = icon("circle")
+            # , icon = shiny::icon("cog", verify_fa = FALSE)
+            , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
           )
           , bs4Dash::menuSubItem(
             "Enter Hours"
             , tabName = "enter_hours"
-            , icon = icon("circle")
+            # , icon = shiny::icon("cog", verify_fa = FALSE)
+            , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
             , selected = F
           )
           , bs4Dash::menuSubItem(
             "Review Hours"
             , tabName = "rvw_hours"
-            , icon = icon("circle")
+            # , icon = shiny::icon("cog", verify_fa = FALSE)
+            , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
             , selected = T
           )
 
