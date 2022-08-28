@@ -9,9 +9,9 @@
 #' @importFrom shiny NS tagList
 
 mod_genr8_hrs_form_ui <- function(
-  id
-  , dstnct_accounts_in
-  ){
+    id
+    , dstnct_accounts_in
+){
   ns <- NS(id)
   tagList(
     fluidRow(
@@ -22,13 +22,13 @@ mod_genr8_hrs_form_ui <- function(
                       , checkboxInput(ns('chbx_incl_hrs')
                                       , 'Include'
                                       , value = T
-                                      )
                       )
+               )
                , column(9
                         , selectInput(ns("slt_account")
-                                                    , 'account'
-                                                    , choices = dstnct_accounts_in
-                                        )
+                                      , 'account'
+                                      , choices = dstnct_accounts_in
+                        )
                )
              )
       )
@@ -72,15 +72,17 @@ mod_genr8_hrs_form_ui <- function(
                  )
                  , column(4
                           , uiOutput(ns('ot_dur'))
-                          )
+                 )
                )
       )
 
     )
     , fluidRow(
       column(12
-             , textAreaInput(ns('txt_notes'), label = NULL, width = '100%')
+             , div(class = 'login-ui'
+                   , textAreaInput(ns('txt_notes'), label = NULL, width = '100%')
              )
+      )
     )
   )
 }
@@ -89,8 +91,8 @@ mod_genr8_hrs_form_ui <- function(
 #'
 #' @noRd
 mod_genr8_hrs_form_server <- function(
-  id
-  , dt_entr_day
+    id
+    , dt_entr_day
 ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -132,7 +134,7 @@ mod_genr8_hrs_form_server <- function(
         dplyr::rename(date = dt_entr_day) %>%
         dplyr::mutate(date = strftime(date, format="%Y-%m-%d")) %>%
         dplyr::mutate(start = paste0(strt_hr, ':', strt_qtr)) %>%
-        dplyr::mutate(end = paste0(end_hr, ':', end_qtr)) %>%
+        dplyr::mutate(end_time = paste0(end_hr, ':', end_qtr)) %>%
         dplyr::mutate(date_start = lubridate::ymd_hm(
           paste0(date, " ", start)
         )) %>%
@@ -142,7 +144,7 @@ mod_genr8_hrs_form_server <- function(
         )) %>%
 
         dplyr::mutate(date_end = lubridate::ymd_hm(
-          paste0(date, " ", end)
+          paste0(date, " ", end_time)
         )) %>%
         dplyr::mutate(date_end = strftime(date_end
                                           , format="%Y-%m-%d %H:%M"

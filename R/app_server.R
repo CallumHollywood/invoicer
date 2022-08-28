@@ -21,7 +21,7 @@ renderMenu <- function(expr, env = parent.frame(), quoted = FALSE, outputArgs = 
 
 
 get_sessions_from_db <- function(
-  # conn = con,
+    # conn = con,
   expiry = cookie_expiry) {
   # DBI::dbReadTable(conn, "sessions") %>%
   #   dplyr::mutate(login_time = lubridate::ymd_hms(login_time)) %>%
@@ -229,6 +229,10 @@ app_server <- function(input, output, session) {
   #### <<<<    CALLMODULES     >>>>  ####
   #-------------------------------------#
 
+  mod_hours_tab_server(
+    "hours_tab_1"
+  )
+
 
   mod_accounts_server(
     "accounts_ui_1"
@@ -243,14 +247,14 @@ app_server <- function(input, output, session) {
     , callback = callback
   )
 
-  mod_enter_hours_server(
-    "enter_hours_1"
-    , pass_around
-  )
+  # mod_enter_hours_server(
+  #   "enter_hours_1"
+  #   , pass_around
+  # )
 
-  mod_review_hours_server(
-    "review_hours_1"
-    )
+  # mod_review_hours_server(
+  #   "review_hours_1"
+  # )
 
 
   #### <<<<    STATIC VALUES   >>>>  ####
@@ -316,11 +320,15 @@ app_server <- function(input, output, session) {
       )
       , bs4Dash::bs4TabItem(
         'enter_hours'
-        , mod_enter_hours_ui("enter_hours_1")
+        # , mod_enter_hours_ui("enter_hours_1")
       )
       , bs4Dash::bs4TabItem(
         'rvw_hours'
-        , mod_review_hours_ui("review_hours_1")
+        # , mod_review_hours_ui("review_hours_1")
+      )
+      , bs4Dash::bs4TabItem(
+        'tab_hours'
+        , mod_hours_tab_ui("hours_tab_1")
       )
 
 
@@ -365,6 +373,14 @@ app_server <- function(input, output, session) {
             , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
           )
           , bs4Dash::menuSubItem(
+            "Hours"
+            , tabName = "tab_hours"
+            # , icon = shiny::icon("cog", verify_fa = FALSE)
+            , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
+            , selected = T
+          )
+
+          , bs4Dash::menuSubItem(
             "Enter Hours"
             , tabName = "enter_hours"
             # , icon = shiny::icon("cog", verify_fa = FALSE)
@@ -376,7 +392,7 @@ app_server <- function(input, output, session) {
             , tabName = "rvw_hours"
             # , icon = shiny::icon("cog", verify_fa = FALSE)
             , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
-            , selected = T
+            , selected = F
           )
 
           # , conditionalPanel("input.menu_left_main === 'enter_hours'"

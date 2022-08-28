@@ -5,6 +5,7 @@
 #' @import shiny
 #' @noRd
 
+# options(browser = "C:/Program Files/Mozilla Firefox/firefox.exe")
 
 # source('R/set_options.R')
 
@@ -62,9 +63,9 @@ app_ui <- function(request) {
         div( class = "login-ui"
              , shinyauthr::loginUI(
                "login"
-               , user_title = "callum"
-               , pass_title = "pw_callu_78"
-               , login_title = div('LOGIN', style = 'color: black')
+               , user_title    = "callum"
+               , pass_title    = "pw_callu_78"
+               , login_title   = div('LOGIN', style = 'color: black')
                , cookie_expiry = cookie_expiry
              )),
         uiOutput("outpt_main")
@@ -99,6 +100,9 @@ golem_add_external_resources <- function() {
       app_title = "authapp"
     )
     , shinyjs::useShinyjs()
+    , tags$style(".login-ui input { color: #fff}")
+    , tags$style(".login-ui input:focus { color: #fff}")
+    , tags$style(".login-ui textarea.form-control { color: #fff}")
     # , shinyalert::useShinyalert()
   )
 }

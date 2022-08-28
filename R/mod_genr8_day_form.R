@@ -13,12 +13,14 @@ mod_genr8_day_form_ui <- function(id){
     # fluidRow(h5(ns(paste0("hrsfrm_ui_", id))))
     fluidRow(
       column(2
+             , div(class = 'login-ui'
              , dateInput(
                ns('dt_entr_day')
                , 'Select Date'
                , value = lubridate::today()
                , width = '80%'
              )
+      )
              , div(
                id = ns('btns')
                , actionButton(ns("btn_gen_r_8_form"), "GENR8 a Record", width = '80%')
