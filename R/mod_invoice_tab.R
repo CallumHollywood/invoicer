@@ -12,15 +12,17 @@ mod_invoice_tab_ui <- function(id){
   tagList(
     fluidRow(
       bs4Dash::tabsetPanel(
-        id = "tabsetpanel3",
+        id = ns("tb_inv"),
+        # id = "tb_inv",
         selected = "invoices",
         vertical = TRUE,
         tabPanel(
           "invoices"
           , bs4Dash::tabBox(
-            title = 'invoices'
+            title = 'INVOICES'
             , elevation = 2
-            , id = ns("tb_inv")
+            , id = ns("tb_inv2")
+            # , id = "tb_inv2"
             , width = 12
             , collapsible = FALSE
             , closable = FALSE
@@ -39,8 +41,15 @@ mod_invoice_tab_ui <- function(id){
                          ns('slt_client')
                          , 'Client'
                          , choices = sn_env$sn_clients
+                         , width = '80%'
                          )
-                       # , actionButton(ns('btn_user_rfrsh'), 'Refresh', width = '80%')
+                       , actionButton(ns('btn_ftch_inv_data'), 'fetch'
+                                      , width = '80%'
+                                      )
+                       , actionButton(ns('btn_prvw_inv_data'), 'preview'
+                                      , width = '80%'
+                       )
+
                 )
                 , column(9
                          , align = 'center'
@@ -53,6 +62,8 @@ mod_invoice_tab_ui <- function(id){
                            , width    = 12
                            # , icon = shiny::icon("cog", verify_fa = FALSE)
                            , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
+                           , br()
+                           , tableOutput(ns('ot_invc_client'))
                          )
                 )
               )
@@ -101,10 +112,91 @@ mod_invoice_tab_server <- function(
     #### <<<<   EVENT REACTIVES  >>>>  ####
     #-------------------------------------#
 
+    # invc_client_rctv <- reactiveVal(NULL)
+
+
+    # observeEvent(input$btn_ftch_inv_data, {
+    #
+    #   message('input$btn_ftch_inv_data')
+    #   message(input$btn_ftch_inv_data)
+    #
+    # })
+
+    # observeEvent(input$btn_ftch_inv_data, {
+    #
+    #   sql_ftch_inv_data <- glue::glue(
+    #     "select * from services.daily_hours where account = '{input$slt_client}';"
+    #   )
+    #
+    #   message(sql_ftch_inv_data)
+    #
+    #   con <- appbench::database_connection()
+    #
+    #   res <- DBI::dbGetQuery(
+    #     con
+    #     , sql_ftch_inv_data
+    #   )
+    #
+    #   DBI::dbDisconnect(con)
+    #
+    #   invc_client_rctv(res)
+    #
+    #   # return(res)
+    #
+    # })
+
+    invc_client_rctv <- eventReactive(input$btn_ftch_inv_data, {
+
+      sql_ftch_inv_data <- glue::glue(
+        "select * from services.daily_hours where account = '{input$slt_client}';"
+      )
+
+      message(sql_ftch_inv_data)
+
+      con <- appbench::database_connection()
+
+      res <- DBI::dbGetQuery(
+        con
+        , sql_ftch_inv_data
+      )
+
+      DBI::dbDisconnect(con)
+
+      # invc_client_rctv(res)
+
+      return(res)
+
+    })
+
 
     #### <<<<   OBSERVES         >>>>  ####
     #-------------------------------------#
 
+
+    #### <<<<   OBSERVE EVENTS   >>>>  ####
+    #-------------------------------------#
+
+    observeEvent(input$btn_prvw_inv_data,{
+
+      showModal(modalDialog(
+        title       = 'Invoice PREVIEW'
+        , size      = 'l'
+        , easyClose = T
+        , h6("PUT 3 reports here")
+        , withTags(
+          tags$ol(
+            tags$li("hours")
+            , tags$li("flat charges")
+            , tags$li("total")
+          )
+        )
+        ,
+      ))
+
+    })
+
+
+    # CONFIRM if this IS required - same init values on UI
     observeEvent(id,{
 
       updateSelectInput(
@@ -116,12 +208,16 @@ mod_invoice_tab_server <- function(
 
     })
 
-    #### <<<<   OBSERVE EVENTS   >>>>  ####
-    #-------------------------------------#
-
 
     #### <<<<    OUTPUTS         >>>>  ####
     #-------------------------------------#
+
+    output$ot_invc_client <- renderTable({
+
+      invc_client_rctv() %>%
+        dplyr::select(date, start, end_time, hours)
+
+    })
 
     #### <<<<    OUTPUT OPTIONS  >>>>  ####
     #-------------------------------------#

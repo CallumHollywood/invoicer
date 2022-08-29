@@ -373,27 +373,27 @@ app_server <- function(input, output, session) {
             , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
           )
           , bs4Dash::menuSubItem(
-            "Hours"
+            "Billable"
             , tabName = "tab_hours"
             # , icon = shiny::icon("cog", verify_fa = FALSE)
             , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
             , selected = T
           )
 
-          , bs4Dash::menuSubItem(
-            "Enter Hours"
-            , tabName = "enter_hours"
-            # , icon = shiny::icon("cog", verify_fa = FALSE)
-            , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
-            , selected = F
-          )
-          , bs4Dash::menuSubItem(
-            "Review Hours"
-            , tabName = "rvw_hours"
-            # , icon = shiny::icon("cog", verify_fa = FALSE)
-            , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
-            , selected = F
-          )
+          # , bs4Dash::menuSubItem(
+          #   "Enter Hours"
+          #   , tabName = "enter_hours"
+          #   # , icon = shiny::icon("cog", verify_fa = FALSE)
+          #   , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
+          #   , selected = F
+          # )
+          # , bs4Dash::menuSubItem(
+          #   "Review Hours"
+          #   , tabName = "rvw_hours"
+          #   # , icon = shiny::icon("cog", verify_fa = FALSE)
+          #   , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
+          #   , selected = F
+          # )
 
           # , conditionalPanel("input.menu_left_main === 'enter_hours'"
           #                    , column(12

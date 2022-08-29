@@ -436,7 +436,7 @@ mod_review_hours_server <- function(
     output$ot_res_fetch_hours <- DT::renderDataTable({
 
       df_x <- res_fetch_hours() %>%
-        dplyr::select(pk_id, date,  start, end_time, hours, account, notes)
+        dplyr::select(pk_id, date, account,  start, end_time, hours, notes)
 
       df_x[['actions']] <-
         paste0('
@@ -451,9 +451,15 @@ mod_review_hours_server <- function(
         , escape   = F
         , filter   = 'top'
         , options = list(
-          server  = FALSE
-          , dom   = 'frtip'
-          , pageLength = 40  #, autoWidth = TRUE
+          server         = FALSE
+          , dom          = 'frtip'
+          , pageLength   = 40
+          , initComplete = DT::JS(
+            "function(settings, json) {",
+            "$(this.api().table().header()).css({'background-color': '#49688e', 'color': 'white'});",
+            "}")
+          , columnDefs = list(list(className = 'dt-center', targets = "_all"))
+
         )
       )
 

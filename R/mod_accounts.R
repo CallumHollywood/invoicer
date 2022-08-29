@@ -48,7 +48,7 @@ mod_accounts_ui <- function(id){
   ns <- NS(id)
   tagList(
     bs4Dash::tabBox(
-      title = "Accounts"
+      title = "ACCOUNTS"
       , elevation = 2
       , id = "tabcard1"
       , width = 12
@@ -234,7 +234,7 @@ mod_accounts_ui <- function(id){
       )
       , tabPanel(
         'invoices'
-        ,        mod_invoice_tab_ui("invoice_tab_1")
+        ,        mod_invoice_tab_ui(ns("invoice_tab_1"))
       )
 
     )

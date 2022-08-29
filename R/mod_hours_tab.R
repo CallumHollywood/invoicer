@@ -11,7 +11,7 @@ mod_hours_tab_ui <- function(id){
   ns <- NS(id)
   tagList(
     bs4Dash::tabBox(
-      title         = "HOURS"
+      title         = "Billable"
       , elevation   = 2
       , id          = ns("ntrhrs")
       , width       = 12
@@ -23,8 +23,12 @@ mod_hours_tab_ui <- function(id){
       , selected    = "enter"
       , side        = "right"
       , tabPanel(
-        "enter"
+        "enter hours"
         , mod_enter_hours_ui(ns("enter_hours_1"))
+      )
+      , tabPanel(
+        "flat charges"
+        , 'flat charges ready mof a mod'
       )
       , tabPanel(
         "review"
