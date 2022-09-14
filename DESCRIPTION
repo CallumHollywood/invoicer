@@ -13,6 +13,7 @@ Imports:
     gargoyle,
     golem (>= 0.3.3),
     janitor,
+    lubridate,
     R.utils,
     readr,
     RPostgres,

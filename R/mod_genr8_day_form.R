@@ -48,6 +48,7 @@ mod_genr8_day_form_server <- function(
   , genr8_dayform
   , dstnct_accounts_in
   , pass_around
+  , sn_env
 ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
@@ -141,6 +142,7 @@ mod_genr8_day_form_server <- function(
         , ui = mod_genr8_hrs_form_ui(
           ns(x_id)
           , dstnct_accounts_in = dstnct_accounts_thru
+          , sn_env             = sn_env
         )
       )
 

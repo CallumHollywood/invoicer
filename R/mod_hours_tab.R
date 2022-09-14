@@ -11,7 +11,7 @@ mod_hours_tab_ui <- function(id){
   ns <- NS(id)
   tagList(
     bs4Dash::tabBox(
-      title         = "Billable"
+      title         = "BILLABLE"
       , elevation   = 2
       , id          = ns("ntrhrs")
       , width       = 12
@@ -20,7 +20,7 @@ mod_hours_tab_ui <- function(id){
       , type        = "tabs"
       , status      = "primary"
       , solidHeader = TRUE
-      , selected    = "enter"
+      , selected    = "enter hours"
       , side        = "right"
       , tabPanel(
         "enter hours"
@@ -47,7 +47,10 @@ mod_hours_tab_ui <- function(id){
 #' hours_tab Server Functions
 #'
 #' @noRd
-mod_hours_tab_server <- function(id){
+mod_hours_tab_server <- function(
+    id
+    , sn_env
+    ){
   moduleServer( id, function(input, output, session){
     ns <- session$ns
 
@@ -60,6 +63,7 @@ mod_hours_tab_server <- function(id){
     mod_enter_hours_server(
       "enter_hours_1"
       , pass_around
+      , sn_env
     )
 
     mod_review_hours_server(

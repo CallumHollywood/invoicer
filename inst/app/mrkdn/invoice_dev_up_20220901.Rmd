@@ -1,0 +1,76 @@
+---
+title: "INVOICE"
+output: 
+  pdf_document:
+  fig_caption: true
+highlight: tango
+number_sections: yes
+latex_engine: pdflatex
+keep_tex: true
+classoption: portrait
+geometry: "left=1cm,right=1cm,top=1.5cm,bottom=1.6cm"
+date: "`r format(Sys.time(), '%B %d, %Y')`"
+---
+
+
+```{r}
+
+library(dplyr)
+
+
+
+```
+
+
+```{r}
+
+pacman::p_load(
+  knitr
+  , rmarkdown
+  , dplyr
+  # , tidyr
+  # , tibble
+  # , stringr
+  # , lubridate
+  # , purrr
+  # , readr
+  # , skimr
+  # , ggplot2
+  # , forcats
+  # , packcircles
+  # , lubridate
+  # , tsibble
+  # , glue
+  # , tidyquant
+  # , viridis
+  # , plotly
+)
+
+
+```
+
+
+
+```{r}
+
+
+invc_client   <- readr::read_rds('invc_client_rctv.rds')
+invoice_table <- readr::read_rds('invoice_table_rctv.rds')
+
+invc_client
+
+```
+
+## Cost per Role
+
+```{r}
+
+invoice_table %>% knitr::kable()
+  
+  
+
+```
+
+
+
+

@@ -8,6 +8,8 @@
 source('R/set_options.R')
 
 
+
+
 cookie_expiry <- 7
 
 # This is a FIX from SO - LOST the link
@@ -62,6 +64,11 @@ sn_env$sn_clients <- DBI::dbGetQuery(
   , 'select distinct account from accounts.accounts order by account;'
 ) %>%
   dplyr::pull(account)
+
+sn_env$sn_roles <- DBI::dbGetQuery(
+  con
+  , 'select distinct role_id, role from services.role order by role;'
+)
 
 DBI::dbDisconnect(con)
 
@@ -231,6 +238,7 @@ app_server <- function(input, output, session) {
 
   mod_hours_tab_server(
     "hours_tab_1"
+    , sn_env = sn_env
   )
 
 
@@ -371,13 +379,14 @@ app_server <- function(input, output, session) {
             , tabName = "view_accounts"
             # , icon = shiny::icon("cog", verify_fa = FALSE)
             , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
+            , selected = T
           )
           , bs4Dash::menuSubItem(
             "Billable"
             , tabName = "tab_hours"
             # , icon = shiny::icon("cog", verify_fa = FALSE)
             , icon = shiny::icon('ice-lolly-tasted', lib="glyphicon")
-            , selected = T
+            , selected = F
           )
 
           # , bs4Dash::menuSubItem(

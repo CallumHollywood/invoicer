@@ -38,6 +38,7 @@ mod_enter_hours_ui <- function(id){
 mod_enter_hours_server <- function(
   id
   , pass_around
+  , sn_env
   # , dstnct_accounts_rctv
 ){
   moduleServer( id, function(input, output, session){
@@ -114,6 +115,7 @@ mod_enter_hours_server <- function(
         , genr8_dayform      = reactive({input$btn_genr8_dayform})
         , dstnct_accounts_in = reactive({dstnct_accounts_rctv()})
         , pass_around        = pass_around
+        , sn_env             = sn_env
       )
 
       insertUI(

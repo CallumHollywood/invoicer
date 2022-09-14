@@ -30,6 +30,9 @@ golem::add_module(name = "genr8_hrs_form")
 golem::add_module(name = "genr8_day_form")
 golem::add_module(name = "review_hours")
 golem::add_module(name = "invoice_tab")
+golem::add_module(name = "hours_tab")
+golem::add_module(name = "edit_hours")
+
 
 ## Add helper functions ----
 ## Creates fct_* and utils_*
@@ -40,7 +43,7 @@ golem::add_module(name = "invoice_tab")
 ## Creates .js and .css files at inst/app/www
 # golem::add_js_file("script")
 # golem::add_js_handler("handlers")
-# golem::add_css_file("custom")
+# golem::add_css_file("styles")
 # golem::add_sass_file("custom")
 
 ## Add internal datasets ----

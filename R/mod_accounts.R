@@ -50,14 +50,14 @@ mod_accounts_ui <- function(id){
     bs4Dash::tabBox(
       title = "ACCOUNTS"
       , elevation = 2
-      , id = "tabcard1"
+      , id = ns("tbacnt")
       , width = 12
       , collapsible = FALSE
       , closable = FALSE
       , type = "tabs"
       , status = "primary"
       , solidHeader = TRUE
-      , selected = "accounts"
+      , selected = "invoices"
       , side = "right"
       , tabPanel(
         "accounts"

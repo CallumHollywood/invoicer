@@ -8,9 +8,21 @@
 #'
 #' @importFrom shiny NS tagList
 
+
+fn_sn_env_sn_roles <- function(tbl){
+
+  tbl_role_id <- as.list(tbl$role_id)
+
+  names(tbl_role_id) <- tbl$role
+
+  return(tbl_role_id)
+
+}
+
 mod_genr8_hrs_form_ui <- function(
     id
     , dstnct_accounts_in
+    , sn_env
 ){
   ns <- NS(id)
   tagList(
@@ -25,9 +37,22 @@ mod_genr8_hrs_form_ui <- function(
                       )
                )
                , column(9
-                        , selectInput(ns("slt_account")
+                        , fluidRow(
+                        selectInput(ns("slt_account")
                                       , 'account'
                                       , choices = dstnct_accounts_in
+                        )
+
+                        )
+                        , fluidRow(
+                          selectInput(ns("slt_role")
+                                      , 'role'
+                                      # , choices = sn_env$sn_roles$role_id
+                                      # , choices = list('developer' = 1, 'consultant' = 2)
+                                      # , choices = list(as.list(setNames(sn_env$sn_roles$role, sn_env$sn_roles$role))))
+                                      , choices = fn_sn_env_sn_roles(sn_env$sn_roles)
+                          )
+
                         )
                )
              )
@@ -116,6 +141,7 @@ mod_genr8_hrs_form_server <- function(
       req(input$slt_end_hr)
       req(input$slt_end_qtr)
       req(input$slt_account)
+      req(input$slt_role)
 
       tibble::tibble(
         id = as.numeric(stringr::str_remove(id, 'dyfrm_' ))
@@ -129,6 +155,7 @@ mod_genr8_hrs_form_server <- function(
         , end_qtr  = input$slt_end_qtr
         , incl_hrs = input$chbx_incl_hrs
         , notes    = input$txt_notes
+        , role_id  = input$slt_role
       ) %>%
 
         dplyr::rename(date = dt_entr_day) %>%

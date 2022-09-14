@@ -1,0 +1,387 @@
+---
+title: ""
+output: 
+  pdf_document:
+  fig_caption: true
+fontfamily: mathpazo
+fontsize: 11pt
+highlight: tango
+number_sections: yes
+latex_engine: pdflatex
+keep_tex: true
+classoption: portrait
+geometry: "left=2.5cm,right=2.5cm,top=2.5cm,bottom=1.6cm"
+params:
+  invc_client: NA
+  invc_table: NA
+  due_date: NA
+  invoice_no: NA
+  client_in: NA
+  company_mine: NA
+  address_mine_1: NA
+  address_mine_2: NA
+  address_mine_3: NA
+  address_mine_4: NA
+  company_client: NA
+  address_client_1: NA
+  address_client_2: NA
+  address_client_3: NA
+  address_client_4: NA
+  account_holder: NA
+  account_number: NA
+  account_bank: NA
+  contact: NA
+  email: NA
+  phone: NA
+header-includes:
+  - \newcommand{\bcenter}{\begin{center}}
+  - \newcommand{\ecenter}{\end{center}}
+  - \usepackage{titling}
+  - \pretitle{\begin{flushleft}}
+  - \posttitle{\end{flushleft}}
+  - \usepackage{fancyhdr}
+---
+
+\begin{flushright}
+\includegraphics[width=7cm]{/home/callum28/nexus/apps/pckgs/invoicer/invoicer/inst/app/mrkdn/nexus_logo.png}
+\end{flushright}
+
+
+```{r echo=FALSE}
+
+pacman::p_load(
+  knitr
+  , rmarkdown
+  , dplyr
+  # , grid
+  # , gridExtra
+  # , tidyr
+  # , tibble
+  # , stringr
+  # , lubridate
+  # , purrr
+  # , readr
+  # , skimr
+  # , ggplot2
+  # , forcats
+  # , packcircles
+  # , lubridate
+  # , tsibble
+  # , glue
+  # , tidyquant
+  # , viridis
+  # , plotly
+)
+
+
+```
+
+
+```{r dev, echo=FALSE}
+
+# invc_client      <- readr::read_rds('invc_client_rctv.rds')
+# due_date         <- 'Payable on Receipt'
+# invoice_no       <- 'inv_no'
+# client_in        <-  'client_in'
+# company_mine     <- 'My Company Name'
+# address_mine_1   <- '39 Toytown Street'
+# address_mine_2   <- 'Capetown'
+# address_mine_3   <- 'South Africa'
+# address_mine_4   <- '7782'
+# company_client   <- 'myclient'
+# address_client_1 <- '71 Goofy Street'
+# address_client_2 <- 'Capetown'
+# address_client_3 <- 'South Africa'
+# address_client_4 <- '7977'
+# account_holder   <- 'Mr John Johnson'
+# account_number   <- 62199999999
+# account_bank     <- 'Big Bank Company'
+# contact          <- 'John Johnson'
+# email            <- 'johnjohnson999@gmail.com'
+# phone            <- '0799999999'
+
+
+
+
+```
+
+
+
+```{r}
+
+
+```
+
+
+```{r,  echo=FALSE, results='asis'}
+
+cat('**INVOICE**')
+
+```
+
+
+```{r prod, echo=FALSE}
+
+invc_client <- params$invc_client
+invc_table  <- params$invc_table 
+
+# invoice_table <- readr::read_rds('invoice_table_rctv.rds')
+
+
+due_date         <- params$due_date
+invoice_no       <- params$invoice_no
+client_in        <- params$client_in
+company_mine     <- params$company_mine
+address_mine_1   <- params$address_mine_1
+address_mine_2   <- params$address_mine_2
+address_mine_3   <- params$address_mine_3
+address_mine_4   <- params$address_mine_4
+company_client   <- params$company_client
+address_client_1 <- params$address_client_1
+address_client_2 <- params$address_client_2
+address_client_3 <- params$address_client_3
+address_client_4 <- params$address_client_4
+account_holder   <- params$account_holder
+account_number   <- params$account_number
+account_bank     <- params$account_bank
+contact          <- params$contact
+email            <- params$email
+phone            <- params$phone
+
+
+```
+
+
+```{r, echo=FALSE}
+
+x_table <- tibble::tibble(
+  item = c('Invoice Date'
+           , 'Invoice No'
+           , 'Client', 'Due Date'
+  )
+  , value = c(
+    as.character(Sys.Date())
+    , invoice_no
+    , client_in, due_date
+  )
+)
+# %>%
+#   kable(
+#     align= c('r','l')
+#     , col.names = NULL
+#     )
+
+# x_table
+
+```
+
+```{r, results='asis', echo=FALSE}
+
+cat(glue::glue('Invoice Date: {x_table$item[1]}'))
+
+```
+
+```{r, results='asis', echo=FALSE}
+
+cat(glue::glue('Invoice No: {x_table$item[1]}'))
+
+```
+
+```{r, results='asis', echo=FALSE}
+
+cat(glue::glue('Account: {x_table$item[1]}'))
+
+```
+
+```{r, results='asis', echo=FALSE}
+
+cat(glue::glue('Due Date: {x_table$item[1]}'))
+
+```
+
+
+\begin{minipage}[t]{0.5\textwidth}
+.\newline
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+\begin{flushright}
+
+
+```{r, results='asis', echo=FALSE}
+
+
+
+```
+
+
+```{r, results='asis', echo=FALSE}
+cat(company_mine)
+```
+
+```{r, results='asis', echo=FALSE}
+cat(address_mine_1)
+```
+
+```{r, results='asis', echo=FALSE}
+cat(address_mine_2)
+```
+
+```{r, results='asis', echo=FALSE}
+cat(address_mine_3)
+```
+
+```{r, results='asis', echo=FALSE}
+cat(address_mine_4)
+```
+
+
+\end{flushright}
+\end{minipage}
+
+```{r, echo=FALSE}
+
+
+
+```
+
+**Bill to:**
+
+\begin{minipage}[t]{0.5\textwidth}
+
+```{r, results='asis', echo=FALSE}
+cat(company_client)
+```
+
+```{r, results='asis', echo=FALSE}
+cat(address_client_1)
+```
+
+```{r, results='asis', echo=FALSE}
+cat(address_client_2)
+```
+
+```{r, results='asis', echo=FALSE}
+cat(address_client_3)
+```
+
+```{r, results='asis', echo=FALSE}
+cat(address_client_4)
+```
+
+\end{minipage}
+\begin{minipage}[t]{0.5\textwidth}
+\end{minipage}
+
+****
+
+```{r}
+
+```
+
+
+```{r, echo=FALSE, message=FALSE}
+
+invc_table %>%
+  # bind_rows(tibble::tibble(
+  #   role = 'TOTAL'
+  #   , rate = ''
+  #   , currency = ''
+  #   , hours = ''
+  #   , sub_total = sum(.$sub_total)
+  # )) %>%
+  kable()
+
+```
+
+
+
+
+```{r}
+
+```
+
+
+```{r,  echo=FALSE, results='asis'}
+
+cat("\\ ")
+cat("\\linebreak")
+cat("\\linebreak")
+cat("\\linebreak")
+cat("\\linebreak")
+
+```
+
+
+
+```{r,  echo=FALSE, results='asis'}
+
+cat('**Please make payment to: **')
+
+```
+
+
+```{r,  echo=FALSE, results='asis'}
+
+cat(glue::glue('Account Holder :  {account_holder}'))
+
+```
+
+
+```{r,  echo=FALSE, results='asis'}
+
+cat(glue::glue('Account Number :  {account_number}'))
+
+```
+
+
+```{r,  echo=FALSE, results='asis'}
+
+cat(glue::glue('Bank :  {account_bank}'))
+
+```
+
+****
+
+
+
+\bcenter
+
+```{r,  echo=FALSE, results='asis'}
+
+cat(glue::glue('If you have any questions about this invoice, please contact {contact}.'))
+
+```
+
+```{r,  echo=FALSE, results='asis'}
+
+cat(glue::glue('Email: {email}.'))
+```
+
+```{r,  echo=FALSE, results='asis'}
+
+cat(glue::glue('Cell : {phone}.'))
+```
+
+
+
+\ecenter
+
+****
+
+\clearpage
+\newpage
+
+```{r, echo=FALSE}
+
+invc_client 
+# %>%
+#   select(role, date, start, end_time, hours) %>%
+#   kable()
+
+```
+
+\bcenter
+
+Thank you for your business!
+
+\ecenter
